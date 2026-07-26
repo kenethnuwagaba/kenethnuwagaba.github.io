@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keneth weds Natasha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<script>
+/* ============================================================
+   EDIT YOUR WEBSITE HERE — this is the only part you need
+   to change. Save the file and refresh the browser to see
+   your updates.
+   ============================================================ */
+const SITE = {
+
+  // --- Couple & event details ---
+  groom: "Keneth",
+  bride: "Natasha",
+  tagline: "Together with our families, we invite you to celebrate our wedding",
+  // Big photo behind the front page — swap for your favourite photo
+  heroImage: "https://static.wixstatic.com/media/71f3e1_899f716da98d43a3a2e13e840de465d5~mv2.jpg",
+  displayDate: "12 · 12 · 2026",
+  weddingDate: "Saturday, December 12, 2026",
+  // Countdown target: YYYY-MM-DDTHH:MM (24-hour time)
+  weddingDateISO: "2026-12-12T11:00",
+  venue: "Christ the King Church, Kampala",
+  receptionVenue: "Nsambya Gardens, Kampala",
+  welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
+
+  // --- Our story ---
+  ourStory: [
+    "We first met through mutual friends, and what began as easy conversation grew into a friendship neither of us wanted to end.",
+    "Years later, that friendship blossomed into love — and on one unforgettable evening, Keneth asked and Natasha said yes.",
+    "Now we begin our forever, and we could not imagine celebrating this day without you."
+  ],
+
+  // --- Programme (order of the day) ---
+  schedule: [
+    { time: "10:30 AM", event: "Guests arrive & are seated", place: "Christ the King Church" },
+    { time: "11:00 AM", event: "Holy Matrimony Ceremony", place: "Christ the King Church" },
+    { time: "1:00 PM", event: "Photo Session", place: "Church Gardens" },
+    { time: "3:00 PM", event: "Reception & Luncheon", place: "Nsambya Gardens" },
+    { time: "5:00 PM", event: "Cake Cutting & Toasts", place: "Nsambya Gardens" },
+    { time: "7:00 PM", event: "Dancing & Celebration", place: "Nsambya Gardens" }
+  ],
+
+  // --- RSVP ---
+  rsvpDeadline: "November 15, 2026",
+  rsvpEmail: "kenethnuwagaba@gmail.com",
+  rsvpWhatsApp: "",   // e.g. "256700000000" (country code, no + sign)
+
+  // --- Guest info ---
+  dressCode: "Formal attire. Colours of the day: black, gold & white.",
+  giftsNote: "Your presence is the greatest gift. Should you wish to bless us further, a gift box will be available at the reception.",
+  directionsLink: "https://www.google.com/maps/search/?api=1&query=Nsambya+Gardens+Kampala",
+  // Embedded map shown on the RSVP page — change the place name if needed
+  mapEmbedQuery: "Nsambya Gardens, Kampala, Uganda",
+  accommodationNote: "Out-of-town guests can find comfortable accommodation near the reception venue. Contact us for recommendations.",
+
+  // --- Live stream ---
+  // Paste ONLY the YouTube video ID (the part after "watch?v=" in the link).
+  // Example: for https://www.youtube.com/watch?v=dQw4w9WgXcQ the ID is dQw4w9WgXcQ
+  youtubeVideoId: "",
+  liveStreamNote: "The ceremony live stream will begin 15 minutes before the service. If the video does not load, refresh this page.",
+
+  // --- Food menu ---
+  // Add, remove, or edit courses and dishes freely.
+  menu: [
+    {
+      course: "Starters",
+      dishes: [
+        { name: "Chicken Spring Rolls", note: "Served with sweet chilli dip" },
+        { name: "Vegetable Samosas", note: "Crispy and golden" },
+        { name: "Fresh Garden Salad", note: "Seasonal vegetables & vinaigrette" }
+      ]
+    },
+    {
+      course: "Main Course",
+      dishes: [
+        { name: "Roast Chicken", note: "With rosemary and garlic" },
+        { name: "Grilled Beef", note: "Slow cooked, served with gravy" },
+        { name: "Steamed Matoke & Rice", note: "With groundnut sauce" },
+        { name: "Vegetarian Pilau", note: "Fragrant spiced rice" }
+      ]
+    },
+    {
+      course: "Dessert",
+      dishes: [
+        { name: "Wedding Cake", note: "Cut and shared with love" },
+        { name: "Fresh Fruit Platter", note: "Tropical selection" }
+      ]
+    },
+    {
+      course: "Drinks",
+      dishes: [
+        { name: "Soft Drinks & Juices", note: "Freely served" },
+        { name: "Wine & Champagne", note: "For the toast" }
+      ]
+    }
+  ],
+
+  // --- Gallery ---
+  // TWO ways to add photos (you can use both):
+  //
+  // 1) EASIEST — no editing needed: create a folder called "photos"
+  //    next to this file and drop pictures into it named
+  //    photo1.jpg, photo2.jpg, photo3.jpg ... (in order, no gaps).
+  //    They will appear in the gallery automatically.
+  //
+  // 2) Add photo links to the list below (any image URL or file name).
+  galleryFolder: "photos",   // folder that is scanned automatically
+  galleryFolderMax: 100,     // how many photoN.jpg files to look for
+  gallery: [
+    "https://static.wixstatic.com/media/71f3e1_81117ec9c2d14a719028ae9b8eb81f4e~mv2.jpg",
+    "https://static.wixstatic.com/media/71f3e1_2cdc8ffabcf94352a7af5cfe7a399bc7~mv2.jpg",
+    "https://static.wixstatic.com/media/71f3e1_539c9b4116b64063953060e2118c7231~mv2.jpg",
+    "https://static.wixstatic.com/media/71f3e1_899f716da98d43a3a2e13e840de465d5~mv2.jpg"
+  ],
+
+  // --- Footer / contact ---
+  contactEmail: "kenethnuwagaba@gmail.com",
+  contactPhone: "",
+  instagram: "",
+  hashtag: "#KenethWedsNatasha"
+};
+/* ============================================================
+   END OF EDITABLE SECTION — no need to change anything below.
+   ============================================================ */
+</script>
+
+<style>
+  :root {
+    --cream: #0d0d0d;      /* page background (black) */
+    --ink: #f0ece5;        /* main text (soft white) */
+    --gold: #c9a15e;       /* gold accent */
+    --blush: #2a2a2a;      /* borders / dividers */
+    --white: #171717;      /* card background */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 1.05rem;
+  }
+  h1, h2, h3 { font-weight: normal; letter-spacing: 0.04em; }
+  .script { font-family: 'Great Vibes', cursive; font-weight: normal; }
+
+  /* Navigation */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--cream);
+    border-bottom: 1px solid var(--blush);
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 0.25rem; padding: 0.9rem 1rem;
+  }
+  nav a {
+    color: var(--ink); text-decoration: none;
+    text-transform: uppercase; font-size: 0.78rem;
+    letter-spacing: 0.18em; padding: 0.4rem 1rem;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+  }
+  nav a.active, nav a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* Pages */
+  .page { display: none; animation: fade .4s ease; }
+  .page.active { display: block; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Hero — full-screen photo */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 5rem 1.5rem 4rem;
+    background-size: cover; background-position: center 30%;
+    isolation: isolate;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.35) 45%, rgba(13,13,13,0.9) 100%);
+  }
+  .hero .small {
+    text-transform: uppercase; letter-spacing: 0.35em; font-size: 0.78rem;
+    color: var(--gold); max-width: 480px; line-height: 2;
+  }
+  .hero .names {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(3.2rem, 11vw, 6.5rem);
+    line-height: 1.15; margin: 1.2rem 0 0.2rem;
+    color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+  }
+  .hero .amp { color: var(--gold); font-size: 0.75em; padding: 0 0.15em; }
+  .hero .weds {
+    text-transform: uppercase; letter-spacing: 0.5em; font-size: 0.85rem;
+    color: var(--ink); margin: 0.4rem 0 1rem;
+  }
+  .hero .date {
+    font-size: clamp(1.4rem, 4vw, 2rem); letter-spacing: 0.25em;
+    color: var(--gold); margin-top: 0.8rem;
+  }
+  .hero .fulldate { font-size: 1rem; letter-spacing: 0.12em; margin-top: 0.3rem; color: var(--ink); }
+  .hero .hashtag { color: var(--gold); margin-top: 0.6rem; font-style: italic; font-size: 1.15rem; }
+  .hero .orn { color: var(--gold); letter-spacing: 0.8em; margin: 1rem 0 0.2rem; font-size: 0.9rem; }
+  .scroll-cue {
+    position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+    color: var(--gold); font-size: 1.4rem; animation: bob 1.8s ease-in-out infinite;
+    text-decoration: none;
+  }
+  @keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,8px); } }
+
+  .section { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .section h2 {
+    text-align: center; font-size: 1.9rem; margin-bottom: 0.4rem;
+  }
+  .section .sub { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.75rem; margin-bottom: 2rem; }
+  .divider { width: 60px; height: 1px; background: var(--gold); margin: 1.2rem auto 2rem; }
+
+  .welcome { text-align: center; font-size: 1.1rem; max-width: 620px; margin: 0 auto; font-style: italic; }
+
+  .details { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+  .card {
+    background: var(--white); border: 1px solid var(--blush);
+    padding: 1.8rem 2rem; text-align: center; min-width: 240px; flex: 1; max-width: 340px;
+  }
+  .card h3 { color: var(--gold); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; margin-bottom: 0.6rem; }
+
+  /* Countdown */
+  .countdown { display: flex; justify-content: center; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap; }
+  .count-box {
+    background: rgba(23,23,23,0.65); border: 1px solid rgba(201,161,94,0.45);
+    backdrop-filter: blur(4px);
+    min-width: 84px; padding: 1rem 0.5rem; text-align: center;
+  }
+  .count-box .num { font-size: 2rem; color: var(--gold); }
+  .count-box .lbl { text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.2em; color: #a89f93; }
+
+  /* Story */
+  .story p { max-width: 640px; margin: 0 auto 1.3rem; text-align: center; font-size: 1.08rem; }
+
+  /* Programme timeline */
+  .timeline { max-width: 620px; margin: 0 auto; }
+  .tl-item {
+    display: flex; gap: 1.5rem; padding: 1.2rem 0;
+    border-bottom: 1px solid var(--blush); align-items: baseline;
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-time { color: var(--gold); min-width: 95px; text-align: right; font-size: 0.95rem; letter-spacing: 0.05em; }
+  .tl-event { font-size: 1.1rem; }
+  .tl-place { font-size: 0.85rem; color: #a89f93; font-style: italic; }
+
+  /* RSVP */
+  .rsvp-box { text-align: center; max-width: 560px; margin: 0 auto; }
+  .rsvp-deadline { color: var(--gold); font-style: italic; margin-bottom: 1.8rem; }
+  .btn {
+    display: inline-block; margin: 0.4rem; padding: 0.85rem 2.2rem;
+    border: 1px solid var(--gold); color: var(--gold); text-decoration: none;
+    text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.78rem;
+    transition: all .2s;
+  }
+  .btn:hover { background: var(--gold); color: #0d0d0d; }
+  .info-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+
+  /* Home photo strip (centered) */
+  .strip { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; margin: 1rem auto 0; max-width: 850px; }
+  .strip img {
+    width: 260px; height: 300px; object-fit: cover; display: block;
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .strip img:hover {
+    transform: scale(1.12);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    position: relative; z-index: 5;
+  }
+  @media (max-width: 600px) { .strip img { width: 100%; } }
+
+  /* Live stream */
+  .video-wrap { position: relative; padding-top: 56.25%; background: #000; margin-top: 1rem; }
+  .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .stream-placeholder {
+    background: var(--white); border: 1px dashed var(--gold);
+    text-align: center; padding: 4rem 2rem; margin-top: 1rem; font-style: italic;
+  }
+  .note { text-align: center; margin-top: 1.2rem; font-size: 0.95rem; color: #a89f93; }
+
+  /* Menu */
+  .course { margin-bottom: 2.5rem; }
+  .course h3 { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 0.25em; font-size: 1rem; margin-bottom: 1.2rem; }
+  .dish { text-align: center; margin-bottom: 1rem; }
+  .dish .name { font-size: 1.1rem; }
+  .dish .dnote { font-size: 0.88rem; color: #a89f93; font-style: italic; }
+
+  /* Gallery */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.8rem; }
+  .grid img {
+    width: 100%; height: 300px; object-fit: cover; display: block; cursor: pointer;
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .grid img:hover {
+    transform: scale(1.07);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    position: relative; z-index: 5;
+  }
+
+  /* Lightbox */
+  #lightbox {
+    display: none; position: fixed; inset: 0; background: rgba(20,17,14,0.94);
+    z-index: 50; justify-content: center; align-items: center; cursor: pointer;
+  }
+  #lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; }
+
+  footer {
+    text-align: center; padding: 3rem 1.5rem; border-top: 1px solid var(--blush);
+    margin-top: 3rem; font-size: 0.9rem; color: #a89f93;
+  }
+  footer .names { font-style: italic; font-size: 1.2rem; color: var(--ink); margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#home" class="active">Home</a>
+  <a href="#story">Our Story</a>
+  <a href="#schedule">Programme</a>
+  <a href="#live">Follow Live</a>
+  <a href="#menu">Food Menu</a>
+  <a href="#gallery">Gallery</a>
+  <a href="#rsvp">RSVP</a>
+</nav>
+
+<!-- HOME -->
+<section class="page active" id="page-home">
+  <div class="hero" id="hero">
+    <div class="small" id="h-tagline"></div>
+    <h1 class="names"><span id="h-groom"></span><span class="amp">&amp;</span><span id="h-bride"></span></h1>
+    <div class="weds">Are Getting Married</div>
+    <div class="orn">✦ ✦ ✦</div>
+    <div class="date" id="h-displaydate"></div>
+    <div class="fulldate" id="h-date"></div>
+    <div class="hashtag" id="h-hashtag"></div>
+    <div class="countdown" id="countdown"></div>
+    <a class="scroll-cue" href="#home" onclick="document.querySelector('.section').scrollIntoView({behavior:'smooth'});return false;">▾</a>
+  </div>
+  <div class="strip" id="h-strip"></div>
+  <div class="section">
+    <h2>From Today and Forever</h2>
+    <div class="divider"></div>
+    <p class="welcome" id="h-welcome"></p>
+    <div class="details">
+      <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
+      <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR STORY -->
+<section class="page" id="page-story">
+  <div class="section">
+    <h2>Our Story</h2>
+    <div class="sub">How it all began</div>
+    <div class="story" id="story-text"></div>
+  </div>
+</section>
+
+<!-- PROGRAMME -->
+<section class="page" id="page-schedule">
+  <div class="section">
+    <h2>Order of the Day</h2>
+    <div class="sub">Where to be, and when</div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<!-- LIVE STREAM -->
+<section class="page" id="page-live">
+  <div class="section">
+    <h2>Follow Live</h2>
+    <div class="sub">Join us from wherever you are</div>
+    <div id="stream"></div>
+    <p class="note" id="stream-note"></p>
+  </div>
+</section>
+
+<!-- FOOD MENU -->
+<section class="page" id="page-menu">
+  <div class="section">
+    <h2>Wedding Menu</h2>
+    <div class="sub">Prepared with love</div>
+    <div id="menu-list"></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="page" id="page-gallery">
+  <div class="section" style="max-width:1100px">
+    <h2>Our Moments</h2>
+    <div class="sub">A gallery of our journey</div>
+    <div class="grid" id="gallery-grid"></div>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section class="page" id="page-rsvp">
+  <div class="section">
+    <h2>RSVP</h2>
+    <div class="sub">We hope you can make it</div>
+    <div class="rsvp-box">
+      <p class="rsvp-deadline" id="rsvp-deadline"></p>
+      <div id="rsvp-buttons"></div>
+    </div>
+    <div class="info-cards">
+      <div class="card"><h3>Dress Code</h3><p id="i-dress"></p></div>
+      <div class="card"><h3>Gifts</h3><p id="i-gifts"></p></div>
+      <div class="card"><h3>Getting There</h3><p id="i-travel"></p></div>
+    </div>
+    <div id="map-embed" style="margin-top:3rem"></div>
+  </div>
+</section>
+
+<div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" alt=""></div>
+
+<footer>
+  <div class="names" id="f-names"></div>
+  <div id="f-contact"></div>
+  <div id="f-hashtag" style="margin-top:0.4rem"></div>
+</footer>
+
+<script>
+// ---------- Rendering (no need to edit) ----------
+const $ = id => document.getElementById(id);
+
+// Home
+$('hero').style.backgroundImage = `url('${SITE.heroImage}')`;
+$('h-tagline').textContent = SITE.tagline;
+$('h-groom').textContent = SITE.groom;
+$('h-bride').textContent = SITE.bride;
+$('h-displaydate').textContent = SITE.displayDate;
+$('h-date').textContent = SITE.weddingDate;
+$('h-hashtag').textContent = SITE.hashtag;
+$('h-welcome').textContent = SITE.welcomeMessage;
+$('h-venue').textContent = SITE.venue;
+$('h-reception').textContent = SITE.receptionVenue;
+$('h-strip').innerHTML = SITE.gallery.slice(0, 3).map(src => `<img src="${src}" alt="Our moment">`).join('');
+
+// Countdown timer
+function updateCountdown() {
+  const target = new Date(SITE.weddingDateISO).getTime();
+  const diff = target - Date.now();
+  if (diff <= 0) {
+    $('countdown').innerHTML = '<div class="count-box" style="min-width:auto;padding:1rem 2rem"><div class="num" style="font-size:1.2rem">Today is the day! 🎉</div></div>';
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff / 3600000) % 24;
+  const m = Math.floor(diff / 60000) % 60;
+  const s = Math.floor(diff / 1000) % 60;
+  $('countdown').innerHTML = [[d,'Days'],[h,'Hours'],[m,'Minutes'],[s,'Seconds']]
+    .map(([n,l]) => `<div class="count-box"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// Our story
+$('story-text').innerHTML = SITE.ourStory.map(p => `<p>${p}</p>`).join('');
+
+// Programme
+$('timeline').innerHTML = SITE.schedule.map(s => `
+  <div class="tl-item">
+    <div class="tl-time">${s.time}</div>
+    <div><div class="tl-event">${s.event}</div>${s.place ? `<div class="tl-place">${s.place}</div>` : ''}</div>
+  </div>`).join('');
+
+// RSVP
+$('rsvp-deadline').textContent = `Kindly respond by ${SITE.rsvpDeadline}`;
+let rsvpBtns = '';
+if (SITE.rsvpEmail) rsvpBtns += `<a class="btn" href="mailto:${SITE.rsvpEmail}?subject=RSVP - ${SITE.groom} weds ${SITE.bride}">RSVP by Email</a>`;
+if (SITE.rsvpWhatsApp) rsvpBtns += `<a class="btn" href="https://wa.me/${SITE.rsvpWhatsApp}?text=Hello! I am confirming my attendance for ${SITE.groom} weds ${SITE.bride}." target="_blank">RSVP on WhatsApp</a>`;
+$('rsvp-buttons').innerHTML = rsvpBtns;
+$('i-dress').textContent = SITE.dressCode;
+$('i-gifts').textContent = SITE.giftsNote;
+$('i-travel').innerHTML = SITE.accommodationNote +
+  (SITE.directionsLink ? `<br><br><a class="btn" href="${SITE.directionsLink}" target="_blank">Open Map</a>` : '');
+
+// Embedded directions map
+if (SITE.mapEmbedQuery) {
+  $('map-embed').innerHTML = `
+    <h3 style="text-align:center;color:var(--gold);text-transform:uppercase;letter-spacing:0.25em;font-size:0.9rem;margin-bottom:1rem">Directions to the Reception</h3>
+    <div class="video-wrap" style="padding-top:45%">
+      <iframe src="https://www.google.com/maps?q=${encodeURIComponent(SITE.mapEmbedQuery)}&output=embed"
+        title="Map to reception" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>`;
+}
+
+// Live stream
+if (SITE.youtubeVideoId) {
+  $('stream').innerHTML = `<div class="video-wrap"><iframe
+    src="https://www.youtube.com/embed/${SITE.youtubeVideoId}?autoplay=0"
+    title="Wedding live stream" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+} else {
+  $('stream').innerHTML = `<div class="stream-placeholder">
+    The live stream link will appear here on the wedding day.<br>
+    <small>(Site owner: paste your YouTube video ID in the settings at the top of this file.)</small></div>`;
+}
+$('stream-note').textContent = SITE.liveStreamNote;
+
+// Menu
+$('menu-list').innerHTML = SITE.menu.map(c => `
+  <div class="course">
+    <h3>${c.course}</h3>
+    ${c.dishes.map(d => `<div class="dish"><div class="name">${d.name}</div>${d.note ? `<div class="dnote">${d.note}</div>` : ''}</div>`).join('')}
+  </div>`).join('');
+
+// Gallery — listed photos + auto-detected photos from the "photos" folder
+function addGalleryPhoto(src) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = 'Wedding moment';
+  img.loading = 'lazy';
+  img.onclick = () => openLightbox(src);
+  img.onerror = () => img.remove();   // silently skip missing files
+  $('gallery-grid').appendChild(img);
+}
+SITE.gallery.forEach(addGalleryPhoto);
+// Auto-scan photos/photo1.jpg, photo2.jpg, ... — new uploads appear automatically
+for (let i = 1; i <= (SITE.galleryFolderMax || 100); i++) {
+  addGalleryPhoto(`${SITE.galleryFolder}/photo${i}.jpg`);
+}
+function openLightbox(src) {
+  $('lightbox-img').src = src;
+  $('lightbox').style.display = 'flex';
+}
+
+// Footer
+$('f-names').textContent = `${SITE.groom} & ${SITE.bride}`;
+$('f-contact').textContent = [SITE.contactEmail, SITE.contactPhone].filter(Boolean).join(' · ');
+$('f-hashtag').textContent = SITE.hashtag;
+
+// Navigation
+function showPage(hash) {
+  const name = (hash || '#home').replace('#', '');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  const page = $('page-' + name) || $('page-home');
+  page.classList.add('active');
+  const link = document.querySelector(`nav a[href="#${name}"]`) || document.querySelector('nav a');
+  link.classList.add('active');
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', () => showPage(location.hash));
+showPage(location.hash);
+</script>
+</body>
+</html>
