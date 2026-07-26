@@ -321,6 +321,97 @@ const SITE = {
     margin-top: 3rem; font-size: 0.9rem; color: #a89f93;
   }
   footer .names { font-style: italic; font-size: 1.2rem; color: var(--ink); margin-bottom: 0.5rem; }
+
+  /* ================= TABLETS ================= */
+  @media (max-width: 900px) {
+    nav { gap: 0; padding: 0.7rem 0.5rem; }
+    nav a { font-size: 0.7rem; letter-spacing: 0.12em; padding: 0.4rem 0.7rem; }
+    .section { padding: 2rem 1.25rem; }
+    .details, .info-cards { gap: 1rem; }
+    .card { min-width: 200px; padding: 1.5rem 1.2rem; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .grid img { height: 240px; }
+  }
+
+  /* ================= PHONES ================= */
+  @media (max-width: 640px) {
+    body { font-size: 1rem; }
+
+    /* Nav: single swipeable row, no cramped wrapping */
+    nav {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0.6rem 0.75rem;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a { flex: 0 0 auto; font-size: 0.68rem; padding: 0.4rem 0.65rem; letter-spacing: 0.1em; }
+
+    /* Hero */
+    .hero { min-height: 92vh; padding: 3rem 1.1rem 3.5rem; background-attachment: scroll; }
+    .hero .small { font-size: 0.62rem; letter-spacing: 0.2em; line-height: 1.9; }
+    .hero .names { font-size: 3.1rem; line-height: 1.1; margin: 0.8rem 0 0.2rem; }
+    .hero .weds { font-size: 0.66rem; letter-spacing: 0.3em; }
+    .hero .date { font-size: 1.5rem; letter-spacing: 0.15em; }
+    .hero .fulldate { font-size: 0.85rem; }
+    .hero .hashtag { font-size: 1rem; }
+    .hero .orn { font-size: 0.75rem; letter-spacing: 0.5em; }
+
+    /* Countdown: 2x2 grid instead of a squeezed row */
+    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; width: 100%; max-width: 340px; margin-left: auto; margin-right: auto; }
+    .count-box { min-width: 0; padding: 0.7rem 0.2rem; }
+    .count-box .num { font-size: 1.35rem; }
+    .count-box .lbl { font-size: 0.5rem; letter-spacing: 0.1em; }
+
+    /* Sections */
+    .section { padding: 2.2rem 1.1rem; }
+    .section h2 { font-size: 1.55rem; }
+    .section .sub { font-size: 0.65rem; letter-spacing: 0.18em; }
+
+    /* Cards stack full width */
+    .details, .info-cards { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+    .card { max-width: none; min-width: 0; width: 100%; padding: 1.4rem 1.1rem; }
+
+    /* Home photos */
+    .strip { gap: 0.5rem; margin-top: 0.5rem; }
+    .strip img { width: 100%; height: 320px; }
+    .strip img:hover { transform: none; box-shadow: none; }
+
+    /* Programme timeline: time above event, left aligned */
+    .tl-item { flex-direction: column; gap: 0.25rem; padding: 1rem 0; }
+    .tl-time { min-width: 0; text-align: left; font-size: 0.8rem; letter-spacing: 0.15em; }
+    .tl-event { font-size: 1.02rem; }
+
+    /* Menu */
+    .course { margin-bottom: 2rem; }
+    .course h3 { font-size: 0.85rem; letter-spacing: 0.18em; }
+    .dish .name { font-size: 1rem; }
+
+    /* Gallery: two per row, tap to enlarge */
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .grid img { height: 190px; }
+    .grid img:hover { transform: none; box-shadow: none; }
+
+    /* Buttons big enough to tap */
+    .btn { display: block; width: 100%; margin: 0.5rem 0; padding: 0.9rem 1rem; font-size: 0.72rem; }
+
+    /* Video & map keep 16:9 / taller map */
+    #map-embed .video-wrap { padding-top: 75% !important; }
+
+    .story p { font-size: 1rem; }
+    .welcome { font-size: 1rem; }
+    footer { padding: 2.2rem 1.1rem; margin-top: 2rem; }
+    .scroll-cue { bottom: 1rem; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 360px) {
+    .hero .names { font-size: 2.5rem; }
+    .count-box .num { font-size: 1.15rem; }
+    .grid img { height: 150px; }
+  }
 </style>
 </head>
 <body>
