@@ -24,7 +24,7 @@ const SITE = {
   displayDate: "12 · 12 · 2026",
   weddingDate: "Saturday, December 12, 2026",
   // Countdown target: YYYY-MM-DDTHH:MM (24-hour time)
-  weddingDateISO: "2026-12-12T11:00",
+  weddingDateISO: "2026-12-12T10:00",
   venue: "Christ the King Church, Kampala",
   receptionVenue: "Nsambya Gardens, Kampala",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
@@ -38,8 +38,8 @@ const SITE = {
 
   // --- Programme (order of the day) ---
   schedule: [
-    { time: "10:30 AM", event: "Guests arrive & are seated", place: "Christ the King Church" },
-    { time: "11:00 AM", event: "Holy Matrimony Ceremony", place: "Christ the King Church" },
+    { time: "9:30 AM", event: "Guests arrive & are seated", place: "Christ the King Church" },
+    { time: "10:00 AM", event: "Holy Matrimony Ceremony", place: "Christ the King Church" },
     { time: "1:00 PM", event: "Photo Session", place: "Church Gardens" },
     { time: "3:00 PM", event: "Reception & Luncheon", place: "Nsambya Gardens" },
     { time: "5:00 PM", event: "Cake Cutting & Toasts", place: "Nsambya Gardens" },
@@ -228,6 +228,9 @@ const SITE = {
     padding: 1.8rem 2rem; text-align: center; min-width: 240px; flex: 1; max-width: 340px;
   }
   .card h3 { color: var(--gold); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; margin-bottom: 0.6rem; }
+  .venue-link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--gold); transition: color .2s; }
+  .venue-link:hover { color: var(--gold); }
+  .venue-link .pin { display: block; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: none; margin-top: 0.4rem; }
 
   /* Countdown */
   .countdown { display: flex; justify-content: center; gap: 0.8rem; margin-top: 2rem; flex-wrap: wrap; }
@@ -443,7 +446,8 @@ $('h-date').textContent = SITE.weddingDate;
 $('h-hashtag').textContent = SITE.hashtag;
 $('h-welcome').textContent = SITE.welcomeMessage;
 $('h-venue').textContent = SITE.venue;
-$('h-reception').textContent = SITE.receptionVenue;
+$('h-reception').innerHTML =
+  `<a href="#rsvp" class="venue-link" onclick="setTimeout(()=>{const m=document.getElementById('map-embed'); if(m) m.scrollIntoView({behavior:'smooth'});},150)">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></a>`;
 $('h-strip').innerHTML = SITE.gallery.slice(0, 3).map(src => `<img src="${src}" alt="Our moment">`).join('');
 
 // Countdown timer
