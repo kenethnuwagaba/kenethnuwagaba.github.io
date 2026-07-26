@@ -384,6 +384,7 @@ const SITE = {
     <h2>Follow Live</h2>
     <div class="sub">Join us from wherever you are</div>
     <div id="stream"></div>
+    <div class="countdown" id="countdown-live"></div>
     <p class="note" id="stream-note"></p>
   </div>
 </section>
@@ -454,16 +455,21 @@ $('h-strip').innerHTML = SITE.gallery.slice(0, 3).map(src => `<img src="${src}" 
 function updateCountdown() {
   const target = new Date(SITE.weddingDateISO).getTime();
   const diff = target - Date.now();
+  let html;
   if (diff <= 0) {
-    $('countdown').innerHTML = '<div class="count-box" style="min-width:auto;padding:1rem 2rem"><div class="num" style="font-size:1.2rem">Today is the day! 🎉</div></div>';
-    return;
+    html = '<div class="count-box" style="min-width:auto;padding:1rem 2rem"><div class="num" style="font-size:1.2rem">Today is the day! 🎉</div></div>';
+  } else {
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff / 3600000) % 24;
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+    html = [[d,'Days'],[h,'Hours'],[m,'Minutes'],[s,'Seconds']]
+      .map(([n,l]) => `<div class="count-box"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('');
   }
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor(diff / 3600000) % 24;
-  const m = Math.floor(diff / 60000) % 60;
-  const s = Math.floor(diff / 1000) % 60;
-  $('countdown').innerHTML = [[d,'Days'],[h,'Hours'],[m,'Minutes'],[s,'Seconds']]
-    .map(([n,l]) => `<div class="count-box"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('');
+  $('countdown').innerHTML = html;
+  // Follow Live page shows the same countdown until the stream link is added
+  const live = $('countdown-live');
+  if (live) live.innerHTML = SITE.youtubeVideoId ? '' : html;
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
@@ -506,10 +512,12 @@ if (SITE.youtubeVideoId) {
     title="Wedding live stream" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
 } else {
   $('stream').innerHTML = `<div class="stream-placeholder">
-    The live stream link will appear here on the wedding day.<br>
-    <small>(Site owner: paste your YouTube video ID in the settings at the top of this file.)</small></div>`;
+    The live stream will be shown here on our wedding day.<br>
+    <span style="font-size:0.9rem">Counting down to the ceremony:</span></div>`;
 }
-$('stream-note').textContent = SITE.liveStreamNote;
+$('stream-note').textContent = SITE.youtubeVideoId
+  ? SITE.liveStreamNote
+  : "Bookmark this page — the ceremony will stream here live on 12 December 2026.";
 
 // Menu
 $('menu-list').innerHTML = SITE.menu.map(c => `
