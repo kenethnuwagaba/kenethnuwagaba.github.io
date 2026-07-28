@@ -27,6 +27,10 @@ const SITE = {
   weddingDateISO: "2026-12-12T10:00",
   venue: "Christ the King Church, Kampala",
   receptionVenue: "Nsambya Gardens, Kampala",
+
+  // --- Join Preparation (WhatsApp group) ---
+  whatsappGroupLink: "https://chat.whatsapp.com/HmadIsOdfqPFhrZoTakIhH",
+  whatsappGroupText: "Join our WhatsApp prep group at:",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
   // --- Our story ---
@@ -226,7 +230,21 @@ const SITE = {
   .card {
     background: var(--white); border: 1px solid var(--blush);
     padding: 1.8rem 2rem; text-align: center; min-width: 240px; flex: 1; max-width: 340px;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
   }
+  .card:hover {
+    transform: scale(1.06);
+    border-color: var(--gold);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+    position: relative; z-index: 4;
+  }
+  .card-wide { max-width: 500px; }
+  .wa-link {
+    display: inline-block; margin-top: 0.6rem; color: var(--gold);
+    text-decoration: none; border-bottom: 1px solid var(--gold);
+    word-break: break-all; font-size: 0.92rem;
+  }
+  .wa-link:hover { color: var(--ink); }
   .card h3 { color: var(--gold); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; margin-bottom: 0.6rem; }
   .venue-link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--gold); transition: color .2s; }
   .venue-link:hover { color: var(--gold); }
@@ -373,6 +391,8 @@ const SITE = {
     /* Cards stack full width */
     .details, .info-cards { flex-direction: column; align-items: stretch; gap: 0.9rem; }
     .card { max-width: none; min-width: 0; width: 100%; padding: 1.4rem 1.1rem; }
+    .card:hover { transform: none; box-shadow: none; }
+    .wa-link { font-size: 0.82rem; }
 
     /* Home photos */
     .strip { gap: 0.5rem; margin-top: 0.5rem; }
@@ -444,6 +464,9 @@ const SITE = {
     <h2>From Today and Forever</h2>
     <div class="divider"></div>
     <p class="welcome" id="h-welcome"></p>
+    <div class="details">
+      <div class="card card-wide"><h3>Join Preparation</h3><p id="h-prep"></p></div>
+    </div>
     <div class="details">
       <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
       <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
@@ -537,6 +560,8 @@ $('h-displaydate').textContent = SITE.displayDate;
 $('h-date').textContent = SITE.weddingDate;
 $('h-hashtag').textContent = SITE.hashtag;
 $('h-welcome').textContent = SITE.welcomeMessage;
+$('h-prep').innerHTML =
+  `${SITE.whatsappGroupText}<br><a class="wa-link" href="${SITE.whatsappGroupLink}" target="_blank" rel="noopener">${SITE.whatsappGroupLink}</a>`;
 $('h-venue').textContent = SITE.venue;
 $('h-reception').innerHTML =
   `<a href="#rsvp" class="venue-link" onclick="setTimeout(()=>{const m=document.getElementById('map-embed'); if(m) m.scrollIntoView({behavior:'smooth'});},150)">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></a>`;
