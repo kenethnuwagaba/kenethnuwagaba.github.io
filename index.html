@@ -30,7 +30,7 @@ const SITE = {
 
   // --- Join Preparation (WhatsApp group) ---
   whatsappGroupLink: "https://chat.whatsapp.com/HmadIsOdfqPFhrZoTakIhH",
-  whatsappGroupText: "Join our WhatsApp prep group",
+  whatsappGroupText: "Join us on WhatsApp",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
   // --- Our story ---
@@ -477,7 +477,7 @@ const SITE = {
     <div class="divider"></div>
     <p class="welcome" id="h-welcome"></p>
     <div class="details">
-      <div class="card"><h3>Join Preparation</h3><p id="h-prep"></p></div>
+      <div class="card"><h3>Join Preparations</h3><p id="h-prep"></p></div>
       <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
       <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
     </div>
@@ -553,8 +553,6 @@ const SITE = {
 
 <footer>
   <div class="names" id="f-names"></div>
-  <div id="f-contact"></div>
-  <div id="f-hashtag" style="margin-top:0.4rem"></div>
 </footer>
 
 <script>
@@ -673,8 +671,6 @@ function openLightbox(src) {
 
 // Footer
 $('f-names').textContent = `${SITE.groom} & ${SITE.bride}`;
-$('f-contact').textContent = [SITE.contactEmail, SITE.contactPhone].filter(Boolean).join(' · ');
-$('f-hashtag').textContent = SITE.hashtag;
 
 // Navigation
 function showPage(hash) {
