@@ -175,18 +175,22 @@ const SITE = {
   .page.active { display: block; }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-  /* Hero — full-screen photo */
+  /* Hero — full-screen photo, pinned in place while content scrolls over it */
+  #page-home { position: relative; }
+  .hero-bg {
+    position: fixed; inset: 0; z-index: -1;
+    background-size: cover; background-position: center 6%;
+    pointer-events: none;
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.35) 45%, rgba(13,13,13,0.9) 100%);
+  }
   .hero {
     position: relative;
     min-height: 100vh;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     text-align: center; padding: 6.5rem 1.5rem 3rem;
-    background-size: cover; background-position: center 6%;
-    isolation: isolate;
-  }
-  .hero::before {
-    content: ''; position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.35) 45%, rgba(13,13,13,0.9) 100%);
   }
   .hero .small {
     text-transform: uppercase; letter-spacing: 0.35em; font-size: 0.78rem;
@@ -220,6 +224,14 @@ const SITE = {
   .section { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
   .section h2 {
     text-align: center; font-size: 1.9rem; margin-bottom: 0.4rem;
+  }
+  /* Home page: content overlays the fixed hero photo with a clean translucent glass panel */
+  #page-home .section {
+    position: relative; z-index: 1;
+    background: rgba(13,13,13,0.86);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding-top: 3rem; padding-bottom: 3.5rem;
+    box-shadow: 0 -20px 40px rgba(13,13,13,0.5);
   }
   .section .sub { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.75rem; margin-bottom: 2rem; }
   .divider { width: 60px; height: 1px; background: var(--gold); margin: 1.2rem auto 2rem; }
@@ -367,7 +379,8 @@ const SITE = {
     nav a { flex: 0 0 auto; font-size: 0.68rem; padding: 0.4rem 0.65rem; letter-spacing: 0.1em; }
 
     /* Hero */
-    .hero { min-height: 92vh; padding: 4rem 1.1rem 3rem; background-attachment: scroll; background-position: center 8%; }
+    .hero { min-height: 92vh; padding: 4rem 1.1rem 3rem; }
+    .hero-bg { background-position: center 8%; }
     .hero .small { font-size: 0.62rem; letter-spacing: 0.2em; line-height: 1.9; }
     .hero .names { font-size: 3.1rem; line-height: 1.1; margin: 0.8rem 0 0.2rem; }
     .hero .weds { font-size: 0.66rem; letter-spacing: 0.3em; }
@@ -447,6 +460,7 @@ const SITE = {
 
 <!-- HOME -->
 <section class="page active" id="page-home">
+  <div class="hero-bg" id="hero-bg"></div>
   <div class="hero" id="hero">
     <div class="small" id="h-tagline"></div>
     <h1 class="names"><span id="h-groom"></span><span class="amp">&amp;</span><span id="h-bride"></span></h1>
@@ -548,7 +562,7 @@ const SITE = {
 const $ = id => document.getElementById(id);
 
 // Home
-$('hero').style.backgroundImage = `url('${SITE.heroImage}')`;
+$('hero-bg').style.backgroundImage = `url('${SITE.heroImage}')`;
 $('h-tagline').textContent = SITE.tagline;
 $('h-groom').textContent = SITE.groom;
 $('h-bride').textContent = SITE.bride;
