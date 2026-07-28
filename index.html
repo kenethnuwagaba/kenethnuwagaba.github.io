@@ -30,7 +30,7 @@ const SITE = {
 
   // --- Join Preparation (WhatsApp group) ---
   whatsappGroupLink: "https://chat.whatsapp.com/HmadIsOdfqPFhrZoTakIhH",
-  whatsappGroupText: "Join our WhatsApp prep group at:",
+  whatsappGroupText: "Join our WhatsApp prep group",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
   // --- Our story ---
@@ -238,13 +238,12 @@ const SITE = {
     box-shadow: 0 14px 40px rgba(0,0,0,0.6);
     position: relative; z-index: 4;
   }
-  .card-wide { max-width: 500px; }
   .wa-link {
-    display: inline-block; margin-top: 0.6rem; color: var(--gold);
+    display: inline-block; color: var(--ink);
     text-decoration: none; border-bottom: 1px solid var(--gold);
-    word-break: break-all; font-size: 0.92rem;
+    transition: color .2s;
   }
-  .wa-link:hover { color: var(--ink); }
+  .wa-link:hover { color: var(--gold); }
   .card h3 { color: var(--gold); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.2em; margin-bottom: 0.6rem; }
   .venue-link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--gold); transition: color .2s; }
   .venue-link:hover { color: var(--gold); }
@@ -465,9 +464,7 @@ const SITE = {
     <div class="divider"></div>
     <p class="welcome" id="h-welcome"></p>
     <div class="details">
-      <div class="card card-wide"><h3>Join Preparation</h3><p id="h-prep"></p></div>
-    </div>
-    <div class="details">
+      <div class="card"><h3>Join Preparation</h3><p id="h-prep"></p></div>
       <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
       <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
     </div>
@@ -561,7 +558,7 @@ $('h-date').textContent = SITE.weddingDate;
 $('h-hashtag').textContent = SITE.hashtag;
 $('h-welcome').textContent = SITE.welcomeMessage;
 $('h-prep').innerHTML =
-  `${SITE.whatsappGroupText}<br><a class="wa-link" href="${SITE.whatsappGroupLink}" target="_blank" rel="noopener">${SITE.whatsappGroupLink}</a>`;
+  `<a class="wa-link" href="${SITE.whatsappGroupLink}" target="_blank" rel="noopener">${SITE.whatsappGroupText}</a>`;
 $('h-venue').textContent = SITE.venue;
 $('h-reception').innerHTML =
   `<a href="#rsvp" class="venue-link" onclick="setTimeout(()=>{const m=document.getElementById('map-embed'); if(m) m.scrollIntoView({behavior:'smooth'});},150)">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></a>`;
