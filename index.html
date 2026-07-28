@@ -42,12 +42,20 @@ const SITE = {
 
   // --- Programme (order of the day) ---
   schedule: [
-    { time: "9:30 AM", event: "Guests arrive & are seated", place: "Christ the King Church" },
-    { time: "10:00 AM", event: "Holy Matrimony Ceremony", place: "Christ the King Church" },
-    { time: "1:00 PM", event: "Photo Session", place: "Church Gardens" },
-    { time: "3:00 PM", event: "Reception & Luncheon", place: "Nsambya Gardens" },
-    { time: "5:00 PM", event: "Cake Cutting & Toasts", place: "Nsambya Gardens" },
-    { time: "7:00 PM", event: "Dancing & Celebration", place: "Nsambya Gardens" }
+    { time: "8:30 AM", event: "Bridal Preparation & Pictures", place: "Bride's Residence", icon: "camera" },
+    { time: "9:00 AM", event: "Groom & Groomsmen Pictures", place: "Groom's Residence", icon: "camera" },
+    { time: "9:30 AM", event: "Guests arrive & are seated", place: "Christ the King Church", icon: "church" },
+    { time: "10:00 AM", event: "Holy Matrimony Ceremony", place: "Christ the King Church", icon: "church" },
+    { time: "11:00 AM", event: "Couple & Bridal Party Portraits", place: "Church Gardens", icon: "camera" },
+    { time: "1:00 PM", event: "Photo Session", place: "Church Gardens", icon: "camera" },
+    { time: "2:45 PM", event: "Grand Entrance & Introductions", place: "Nsambya Gardens", icon: "doors" },
+    { time: "3:00 PM", event: "Reception & Luncheon", place: "Nsambya Gardens", icon: "food" },
+    { time: "3:30 PM", event: "Welcome Speech", place: "Nsambya Gardens", icon: "mic" },
+    { time: "4:00 PM", event: "First Dance", place: "Nsambya Gardens", icon: "dance" },
+    { time: "5:00 PM", event: "Cake Cutting & Toasts", place: "Nsambya Gardens", icon: "toast" },
+    { time: "6:00 PM", event: "Newlywed Private Photos", place: "Nsambya Gardens", icon: "camera" },
+    { time: "7:00 PM", event: "Dancing & Celebration", place: "Nsambya Gardens", icon: "music" },
+    { time: "9:00 PM", event: "Send-Off", place: "Nsambya Gardens", icon: "wave" }
   ],
 
   // --- RSVP ---
@@ -274,16 +282,41 @@ const SITE = {
   /* Story */
   .story p { max-width: 640px; margin: 0 auto 1.3rem; text-align: center; font-size: 1.08rem; }
 
-  /* Programme timeline */
-  .timeline { max-width: 620px; margin: 0 auto; }
-  .tl-item {
-    display: flex; gap: 1.5rem; padding: 1.2rem 0;
-    border-bottom: 1px solid var(--blush); align-items: baseline;
+  /* Programme timeline — vertical, alternating, with icon medallions */
+  .timeline {
+    position: relative; max-width: 700px; margin: 2.5rem auto 0; padding: 2.5rem 0;
   }
-  .tl-item:last-child { border-bottom: none; }
-  .tl-time { color: var(--gold); min-width: 95px; text-align: right; font-size: 0.95rem; letter-spacing: 0.05em; }
-  .tl-event { font-size: 1.1rem; }
-  .tl-place { font-size: 0.85rem; color: #a89f93; font-style: italic; }
+  .timeline::before {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+    background: var(--gold); transform: translateX(-50%);
+  }
+  .timeline::after {
+    content: ''; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px;
+    border-radius: 50%; border: 1.5px solid var(--gold); background: var(--cream);
+    transform: translateX(-50%);
+  }
+  .tl-cap-top {
+    position: absolute; left: 50%; top: -6px; width: 12px; height: 12px;
+    border-radius: 50%; border: 1.5px solid var(--gold); background: var(--cream);
+    transform: translateX(-50%); z-index: 2;
+  }
+  .tl-item {
+    position: relative; width: 50%; padding: 0 3.2rem 3.2rem 0; box-sizing: border-box;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item:nth-child(odd) { left: 0; text-align: right; }
+  .tl-item:nth-child(even) { left: 50%; text-align: left; padding: 0 0 3.2rem 3.2rem; }
+  .tl-icon {
+    position: absolute; top: 0; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--white); border: 1px solid var(--gold); color: var(--gold);
+    display: flex; align-items: center; justify-content: center; z-index: 2;
+  }
+  .tl-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .tl-item:nth-child(odd) .tl-icon { right: -22px; }
+  .tl-item:nth-child(even) .tl-icon { left: -22px; }
+  .tl-time { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .tl-event { font-size: 1.08rem; }
+  .tl-place { font-size: 0.85rem; color: #a89f93; font-style: italic; margin-top: 0.15rem; }
 
   /* RSVP */
   .rsvp-box { text-align: center; max-width: 560px; margin: 0 auto; }
@@ -411,10 +444,20 @@ const SITE = {
     .strip img { width: 100%; height: 320px; }
     .strip img:hover { transform: none; box-shadow: none; }
 
-    /* Programme timeline: time above event, left aligned */
-    .tl-item { flex-direction: column; gap: 0.25rem; padding: 1rem 0; }
-    .tl-time { min-width: 0; text-align: left; font-size: 0.8rem; letter-spacing: 0.15em; }
-    .tl-event { font-size: 1.02rem; }
+    /* Programme timeline: collapse to single left-rail column */
+    .timeline { margin-top: 1.5rem; padding: 1.5rem 0; }
+    .timeline::before { left: 21px; transform: none; }
+    .timeline::after, .tl-cap-top { left: 21px; transform: none; }
+    .tl-item, .tl-item:nth-child(even) {
+      left: 0; width: 100%; text-align: left;
+      padding: 0 0 2.2rem 60px;
+    }
+    .tl-item:nth-child(odd) .tl-icon, .tl-item:nth-child(even) .tl-icon {
+      left: 0; right: auto; width: 36px; height: 36px;
+    }
+    .tl-icon svg { width: 17px; height: 17px; }
+    .tl-time { font-size: 0.78rem; }
+    .tl-event { font-size: 1rem; }
 
     /* Menu */
     .course { margin-bottom: 2rem; }
@@ -601,10 +644,23 @@ setInterval(updateCountdown, 1000);
 $('story-text').innerHTML = SITE.ourStory.map(p => `<p>${p}</p>`).join('');
 
 // Programme
-$('timeline').innerHTML = SITE.schedule.map(s => `
+const TL_ICONS = {
+  camera: '<svg viewBox="0 0 24 24"><path d="M4 8h3.2l1.6-2h6.4l1.6 2H20v11H4z"/><circle cx="12" cy="13.2" r="3.4"/></svg>',
+  church: '<svg viewBox="0 0 24 24"><path d="M12 2v3M10.5 3.5h3M6 21V11l6-4.2L18 11v10M6 21h12M9.5 21v-5.5h5V21"/></svg>',
+  doors: '<svg viewBox="0 0 24 24"><path d="M4 21V4h7v17M13 21V7h7v14M4 21h16M8 12.5v.1M17 12.5v.1"/></svg>',
+  dance: '<svg viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><path d="M12 6.5v5.5M12 8l-5-2.5M12 8l5-2.5M12 12l-4.5 8M12 12l4.5 8"/></svg>',
+  mic: '<svg viewBox="0 0 24 24"><rect x="9.3" y="2" width="5.4" height="11" rx="2.7"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3M9 20.5h6"/></svg>',
+  food: '<svg viewBox="0 0 24 24"><path d="M7 2v7M5 2v4.3a2 2 0 0 0 4 0V2M9 2v20M17 2c-2.2 0-3.5 2.3-3.5 5.5S14.8 12 17 12v10"/></svg>',
+  toast: '<svg viewBox="0 0 24 24"><path d="M6.5 3h4.6l-.8 6.3a2.3 2.3 0 0 1-4.6-.4V3zM8.8 9.8V21M6.3 21h5M14.8 5h3.7l-.6 5a1.9 1.9 0 0 1-3.8 0zM16.5 10v11M14.3 21h4.4"/></svg>',
+  music: '<svg viewBox="0 0 24 24"><path d="M9 18V5.2L20 3v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>',
+  wave: '<svg viewBox="0 0 24 24"><path d="M8 13.2V6.6a1.4 1.4 0 0 1 2.8 0V11M10.8 11V4.6a1.4 1.4 0 0 1 2.8 0V11M13.6 11V6.6a1.4 1.4 0 0 1 2.8 0v6M16.4 12.6v-2a1.4 1.4 0 0 1 2.8 0V15c0 3.3-2.5 6-5.8 6h-1.6c-1.9 0-3-1-3.9-1.9l-3.4-3.5 1.5-1.5L8.3 16"/></svg>'
+};
+$('timeline').innerHTML = '<div class="tl-cap-top"></div>' + SITE.schedule.map(s => `
   <div class="tl-item">
+    <div class="tl-icon">${TL_ICONS[s.icon] || TL_ICONS.camera}</div>
     <div class="tl-time">${s.time}</div>
-    <div><div class="tl-event">${s.event}</div>${s.place ? `<div class="tl-place">${s.place}</div>` : ''}</div>
+    <div class="tl-event">${s.event}</div>
+    ${s.place ? `<div class="tl-place">${s.place}</div>` : ''}
   </div>`).join('');
 
 // RSVP
