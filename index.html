@@ -20,7 +20,7 @@ const SITE = {
   bride: "Natasha",
   tagline: "Together with our families, we invite you to celebrate our wedding",
   // Big photo behind the front page — swap for your favourite photo
-  heroImage: "https://static.wixstatic.com/media/71f3e1_899f716da98d43a3a2e13e840de465d5~mv2.jpg",
+  heroImage: "hero.jpg",
   displayDate: "12 · 12 · 2026",
   weddingDate: "Saturday, December 12, 2026",
   // Countdown target: YYYY-MM-DDTHH:MM (24-hour time)
@@ -181,7 +181,7 @@ const SITE = {
     min-height: 100vh;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     text-align: center; padding: 5rem 1.5rem 4rem;
-    background-size: cover; background-position: center 30%;
+    background-size: cover; background-position: center 22%;
     isolation: isolate;
   }
   .hero::before {
@@ -458,7 +458,6 @@ const SITE = {
     <div class="countdown" id="countdown"></div>
     <a class="scroll-cue" href="#home" onclick="document.querySelector('.section').scrollIntoView({behavior:'smooth'});return false;">▾</a>
   </div>
-  <div class="strip" id="h-strip"></div>
   <div class="section">
     <h2>From Today and Forever</h2>
     <div class="divider"></div>
@@ -562,7 +561,6 @@ $('h-prep').innerHTML =
 $('h-venue').textContent = SITE.venue;
 $('h-reception').innerHTML =
   `<a href="#rsvp" class="venue-link" onclick="setTimeout(()=>{const m=document.getElementById('map-embed'); if(m) m.scrollIntoView({behavior:'smooth'});},150)">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></a>`;
-$('h-strip').innerHTML = SITE.gallery.slice(0, 3).map(src => `<img src="${src}" alt="Our moment">`).join('');
 
 // Countdown timer
 function updateCountdown() {
