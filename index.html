@@ -33,6 +33,11 @@ const SITE = {
   whatsappGroupText: "Join us on WhatsApp",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
+  // --- Make a Contribution (writes to your "Pledges" Google Sheet) ---
+  // Paste your deployed Google Apps Script Web App URL here (see setup notes).
+  pledgeEndpoint: "",
+  pledgeCurrency: "UGX",
+
   // --- Our story ---
   ourStory: [
     "We first met through mutual friends, and what began as easy conversation grew into a friendship neither of us wanted to end.",
@@ -191,7 +196,9 @@ const SITE = {
     pointer-events: none;
     animation: kenburns 24s ease-in-out infinite alternate;
     will-change: transform;
+    display: none;
   }
+  body.has-hero .hero-bg { display: block; }
   @keyframes kenburns {
     0%   { transform: scale(1) translate(0, 0); }
     100% { transform: scale(1.09) translate(-0.6%, -1.2%); }
@@ -242,8 +249,8 @@ const SITE = {
   .section h2 {
     text-align: center; font-size: 1.9rem; margin-bottom: 0.4rem;
   }
-  /* Home page: content overlays the fixed hero photo with a clean translucent glass panel */
-  #page-home .section {
+  /* Home & Contribute pages: content overlays the fixed hero photo with a clean translucent glass panel */
+  #page-home .section, #page-contribute .section {
     position: relative; z-index: 1;
     background: rgba(13,13,13,0.86);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -334,10 +341,29 @@ const SITE = {
     display: inline-block; margin: 0.4rem; padding: 0.85rem 2.2rem;
     border: 1px solid var(--gold); color: var(--gold); text-decoration: none;
     text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.78rem;
-    transition: all .2s;
+    transition: all .2s; background: none; cursor: pointer; font-family: inherit;
   }
   .btn:hover { background: var(--gold); color: #0d0d0d; }
+  .btn:disabled { opacity: 0.55; cursor: default; }
   .info-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+
+  /* Pledge / contribution form */
+  .pledge-form { max-width: 460px; margin: 0 auto; text-align: left; }
+  .pledge-form label {
+    display: block; margin-bottom: 0.4rem; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold);
+  }
+  .pledge-form input {
+    width: 100%; padding: 0.85rem 1rem; margin-bottom: 1.3rem;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--blush);
+    color: var(--ink); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+  }
+  .pledge-form input:focus { outline: none; border-color: var(--gold); }
+  .pledge-form input::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(3) hue-rotate(5deg); }
+  .pledge-form .btn { width: 100%; text-align: center; margin: 0.4rem 0 0; }
+  .pledge-status { text-align: center; margin-top: 1rem; font-size: 0.9rem; min-height: 1.2em; }
+  .pledge-status.success { color: var(--gold); }
+  .pledge-status.error { color: #e08585; }
 
   /* Home photo strip (centered) */
   .strip { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; margin: 1rem auto 0; max-width: 850px; }
@@ -510,9 +536,10 @@ const SITE = {
   <a href="#rsvp">RSVP</a>
 </nav>
 
+<div class="hero-bg" id="hero-bg"></div>
+
 <!-- HOME -->
 <section class="page active" id="page-home">
-  <div class="hero-bg" id="hero-bg"></div>
   <div class="hero" id="hero">
     <div class="small" id="h-tagline"></div>
     <h1 class="names"><span id="h-groom"></span><span class="amp">&amp;</span><span id="h-bride"></span></h1>
@@ -530,6 +557,7 @@ const SITE = {
     <p class="welcome" id="h-welcome"></p>
     <div class="details">
       <div class="card"><h3>Join Preparations</h3><p id="h-prep"></p></div>
+      <div class="card"><h3>Make a Contribution</h3><p><a class="wa-link" href="#contribute">Support our celebration</a></p></div>
       <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
       <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
     </div>
@@ -598,6 +626,25 @@ const SITE = {
       <div class="card"><h3>Getting There</h3><p id="i-travel"></p></div>
     </div>
     <div id="map-embed" style="margin-top:3rem"></div>
+  </div>
+</section>
+
+<!-- CONTRIBUTE -->
+<section class="page" id="page-contribute">
+  <div class="section">
+    <h2>Make a Contribution</h2>
+    <div class="sub">Every gesture means the world to us</div>
+    <p class="welcome" style="margin-bottom:2.2rem;">If you'd like to contribute towards our celebration, kindly fill in the form below. We are deeply grateful for your love and support.</p>
+    <form class="pledge-form" id="pledge-form">
+      <label for="pledge-name">Name</label>
+      <input type="text" id="pledge-name" name="name" required placeholder="Your full name" autocomplete="name">
+      <label for="pledge-amount">Amount (<span id="pledge-currency"></span>)</label>
+      <input type="number" id="pledge-amount" name="amount" min="1" step="1" required placeholder="e.g. 50000" inputmode="numeric">
+      <label for="pledge-date">Collection Date</label>
+      <input type="date" id="pledge-date" name="date" required>
+      <button type="submit" class="btn" id="pledge-submit">Submit</button>
+      <p id="pledge-status" class="pledge-status"></p>
+    </form>
   </div>
 </section>
 
@@ -693,6 +740,62 @@ if (SITE.mapEmbedQuery) {
     </div>`;
 }
 
+// Make a Contribution (writes to the "Pledges" Google Sheet via Apps Script)
+const pledgeForm = $('pledge-form');
+if (pledgeForm) {
+  $('pledge-currency').textContent = SITE.pledgeCurrency || 'UGX';
+  const dateInput = $('pledge-date');
+  const pad = n => String(n).padStart(2, '0');
+  const toISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const todayISO = toISO(new Date());
+  const weddingISO = (SITE.weddingDateISO || '').slice(0, 10);
+  dateInput.min = todayISO;
+  if (weddingISO) dateInput.max = weddingISO;
+
+  pledgeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = $('pledge-status');
+    const btn = $('pledge-submit');
+
+    if (!SITE.pledgeEndpoint) {
+      statusEl.textContent = 'This form is being set up — please check back shortly.';
+      statusEl.className = 'pledge-status error';
+      return;
+    }
+
+    const payload = {
+      name: $('pledge-name').value.trim(),
+      amount: $('pledge-amount').value,
+      date: dateInput.value
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    statusEl.textContent = '';
+    statusEl.className = 'pledge-status';
+
+    try {
+      await fetch(SITE.pledgeEndpoint, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      statusEl.textContent = 'Thank you! Your contribution has been recorded.';
+      statusEl.className = 'pledge-status success';
+      pledgeForm.reset();
+      dateInput.min = todayISO;
+      if (weddingISO) dateInput.max = weddingISO;
+    } catch (err) {
+      statusEl.textContent = 'Something went wrong — please try again.';
+      statusEl.className = 'pledge-status error';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+    }
+  });
+}
+
 // Live stream
 if (SITE.youtubeVideoId) {
   $('stream').innerHTML = `<div class="video-wrap"><iframe
@@ -744,8 +847,9 @@ function showPage(hash) {
   document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
   const page = $('page-' + name) || $('page-home');
   page.classList.add('active');
-  const link = document.querySelector(`nav a[href="#${name}"]`) || document.querySelector('nav a');
-  link.classList.add('active');
+  const link = document.querySelector(`nav a[href="#${name}"]`);
+  if (link) link.classList.add('active');
+  document.body.classList.toggle('has-hero', name === 'home' || name === 'contribute');
   window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', () => showPage(location.hash));
