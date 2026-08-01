@@ -92,6 +92,8 @@ const SITE = {
   dressCode: "Formal attire. Colours of the day: black, gold & white.",
   giftsNote: "Your presence is the greatest gift. Should you wish to bless us further, a gift box will be available at the reception.",
   directionsLink: "https://www.google.com/maps/search/?api=1&query=Nsambya+Gardens+Kampala",
+  // Map link for the Ceremony card on the home page
+  ceremonyDirectionsLink: "https://www.google.com/maps/search/?api=1&query=Christ+the+King+Church+Kampala",
   // Embedded map shown on the RSVP page — change the place name if needed
   mapEmbedQuery: "Nsambya Gardens, Kampala, Uganda",
   accommodationNote: "Out-of-town guests can find comfortable accommodation near the reception venue. Contact us for recommendations.",
@@ -294,6 +296,12 @@ const SITE = {
     box-shadow: 0 14px 40px rgba(0,0,0,0.6);
     position: relative; z-index: 4;
   }
+  /* Whole-card links (home page) — the entire card is clickable */
+  a.card {
+    display: block; text-decoration: none; color: var(--ink); cursor: pointer;
+  }
+  a.card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  a.card:hover .wa-link, a.card:hover .venue-link { color: var(--gold); }
   .wa-link {
     display: inline-block; color: var(--ink);
     text-decoration: none; border-bottom: 1px solid var(--gold);
@@ -597,10 +605,10 @@ const SITE = {
     <div class="divider"></div>
     <p class="welcome" id="h-welcome"></p>
     <div class="details">
-      <div class="card"><h3>Join Preparations</h3><p id="h-prep"></p></div>
-      <div class="card"><h3>Make a Contribution</h3><p><a class="wa-link" href="#contribute">Support our celebration</a></p></div>
-      <div class="card"><h3>Ceremony</h3><p id="h-venue"></p></div>
-      <div class="card"><h3>Reception</h3><p id="h-reception"></p></div>
+      <a class="card" id="card-prep" target="_blank" rel="noopener"><h3>Join Preparations</h3><p id="h-prep"></p></a>
+      <a class="card" id="card-contribute" href="#contribute"><h3>Make a Contribution</h3><p><span class="wa-link">Support our celebration</span></p></a>
+      <a class="card" id="card-ceremony" target="_blank" rel="noopener"><h3>Ceremony</h3><p id="h-venue"></p></a>
+      <a class="card" id="card-reception" href="#rsvp"><h3>Reception</h3><p id="h-reception"></p></a>
     </div>
   </div>
 </section>
@@ -727,11 +735,22 @@ $('h-displaydate').textContent = SITE.displayDate;
 $('h-date').textContent = SITE.weddingDate;
 $('h-hashtag').textContent = SITE.hashtag;
 $('h-welcome').textContent = SITE.welcomeMessage;
-$('h-prep').innerHTML =
-  `<a class="wa-link" href="${SITE.whatsappGroupLink}" target="_blank" rel="noopener">${SITE.whatsappGroupText}</a>`;
-$('h-venue').textContent = SITE.venue;
+// Home cards — the whole card is the link
+$('card-prep').href = SITE.whatsappGroupLink;
+$('h-prep').innerHTML = `<span class="wa-link">${SITE.whatsappGroupText}</span>`;
+
+$('card-ceremony').href = SITE.ceremonyDirectionsLink || SITE.directionsLink;
+$('h-venue').innerHTML =
+  `<span class="venue-link">${SITE.venue}<span class="pin"> ⟶ Directions</span></span>`;
+
 $('h-reception').innerHTML =
-  `<a href="#rsvp" class="venue-link" onclick="setTimeout(()=>{const m=document.getElementById('map-embed'); if(m) m.scrollIntoView({behavior:'smooth'});},150)">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></a>`;
+  `<span class="venue-link">${SITE.receptionVenue}<span class="pin"> ⟶ Directions</span></span>`;
+$('card-reception').addEventListener('click', () => {
+  setTimeout(() => {
+    const m = $('map-embed');
+    if (m) m.scrollIntoView({ behavior: 'smooth' });
+  }, 150);
+});
 
 // Countdown timer
 function updateCountdown() {
