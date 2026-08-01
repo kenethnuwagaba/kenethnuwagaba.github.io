@@ -638,6 +638,8 @@ const SITE = {
     <form class="pledge-form" id="pledge-form">
       <label for="pledge-name">Name</label>
       <input type="text" id="pledge-name" name="name" required placeholder="Your full name" autocomplete="name">
+      <label for="pledge-phone">Phone Number</label>
+      <input type="tel" id="pledge-phone" name="phone" required placeholder="e.g. 0700 000 000" autocomplete="tel" inputmode="tel">
       <label for="pledge-amount">Amount (<span id="pledge-currency"></span>)</label>
       <input type="number" id="pledge-amount" name="amount" min="1" step="1" required placeholder="e.g. 50000" inputmode="numeric">
       <label for="pledge-date">Collection Date</label>
@@ -765,6 +767,7 @@ if (pledgeForm) {
 
     const payload = {
       name: $('pledge-name').value.trim(),
+      phone: $('pledge-phone').value.trim(),
       amount: $('pledge-amount').value,
       date: dateInput.value
     };
