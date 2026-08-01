@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Keneth weds Natasha</title>
+<meta name="description" content="Keneth & Natasha are getting married on 12 December 2026 in Kampala, Uganda. Join us in celebrating our special day.">
+<link rel="canonical" href="https://kenwedstasha.com/">
+
+<!-- Social preview (WhatsApp, Facebook, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Keneth & Natasha's Wedding — 12.12.2026">
+<meta property="og:description" content="Together with our families, we invite you to celebrate our wedding in Kampala, Uganda.">
+<meta property="og:image" content="https://kenwedstasha.com/hero.jpg">
+<meta property="og:url" content="https://kenwedstasha.com/">
+<meta property="og:site_name" content="Keneth weds Natasha">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Keneth & Natasha's Wedding — 12.12.2026">
+<meta name="twitter:description" content="Together with our families, we invite you to celebrate our wedding in Kampala, Uganda.">
+<meta name="twitter:image" content="https://kenwedstasha.com/hero.jpg">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
@@ -33,8 +53,8 @@ const SITE = {
   whatsappGroupText: "Join us on WhatsApp",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
-  // --- Make a Contribution (writes to your "Pledges" Google Sheet) ---
-  // Paste your deployed Google Apps Script Web App URL here (see setup notes).
+  // --- Make a Contribution & Well Wishes (writes to your Google Sheet's "Pledges" / "Wishes" tabs) ---
+  // Shared Google Apps Script Web App URL — used by both the Contribution and Well Wishes forms.
   pledgeEndpoint: "https://script.google.com/macros/s/AKfycby6fgKnPnZKa-u2LLyNhlLqmHskI1FXh9zXIkjQ_lWDNDU2G62WEVoXQbMCWysabSgJWA/exec",
   pledgeCurrency: "UGX",
 
@@ -249,8 +269,8 @@ const SITE = {
   .section h2 {
     text-align: center; font-size: 1.9rem; margin-bottom: 0.4rem;
   }
-  /* Home & Contribute pages: content overlays the fixed hero photo with a clean translucent glass panel */
-  #page-home .section, #page-contribute .section {
+  /* Home, Contribute & Well Wishes pages: content overlays the fixed hero photo with a clean translucent glass panel */
+  #page-home .section, #page-contribute .section, #page-wishes .section {
     position: relative; z-index: 1;
     background: rgba(13,13,13,0.86);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -294,6 +314,16 @@ const SITE = {
   }
   .count-box .num { font-size: 2rem; color: var(--gold); }
   .count-box .lbl { text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.2em; color: #a89f93; }
+
+  /* Add to Calendar */
+  .add-cal { display: flex; justify-content: center; gap: 0.7rem; margin-top: 1.4rem; flex-wrap: wrap; }
+  .cal-btn {
+    display: inline-block; padding: 0.55rem 1.3rem; border: 1px solid rgba(201,161,94,0.55);
+    color: var(--gold); text-decoration: none; text-transform: uppercase;
+    letter-spacing: 0.15em; font-size: 0.68rem; transition: all .2s;
+    background: rgba(23,23,23,0.5); backdrop-filter: blur(4px); cursor: pointer;
+  }
+  .cal-btn:hover { background: var(--gold); color: #0d0d0d; }
 
   /* Story */
   .story p { max-width: 640px; margin: 0 auto 1.3rem; text-align: center; font-size: 1.08rem; }
@@ -358,8 +388,14 @@ const SITE = {
     background: rgba(255,255,255,0.06); border: 1px solid var(--blush);
     color: var(--ink); font-family: inherit; font-size: 1rem; box-sizing: border-box;
   }
-  .pledge-form input:focus { outline: none; border-color: var(--gold); }
+  .pledge-form input:focus, .pledge-form textarea:focus { outline: none; border-color: var(--gold); }
   .pledge-form input::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(3) hue-rotate(5deg); }
+  .pledge-form textarea {
+    width: 100%; padding: 0.85rem 1rem; margin-bottom: 1.3rem;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--blush);
+    color: var(--ink); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+    resize: vertical; min-height: 110px;
+  }
   .pledge-form .btn { width: 100%; text-align: center; margin: 0.4rem 0 0; }
   .pledge-status { text-align: center; margin-top: 1rem; font-size: 0.9rem; min-height: 1.2em; }
   .pledge-status.success { color: var(--gold); }
@@ -534,6 +570,7 @@ const SITE = {
   <a href="#menu">Food Menu</a>
   <a href="#gallery">Gallery</a>
   <a href="#rsvp">RSVP</a>
+  <a href="#wishes">Well Wishes</a>
 </nav>
 
 <div class="hero-bg" id="hero-bg"></div>
@@ -549,6 +586,10 @@ const SITE = {
     <div class="fulldate" id="h-date"></div>
     <div class="hashtag" id="h-hashtag"></div>
     <div class="countdown" id="countdown"></div>
+    <div class="add-cal" id="add-cal">
+      <a class="cal-btn" id="cal-google" href="#" target="_blank" rel="noopener">+ Google Calendar</a>
+      <a class="cal-btn" id="cal-ics" href="#" download="Keneth-Natasha-Wedding.ics">+ Apple / Outlook</a>
+    </div>
     <a class="scroll-cue" href="#home" onclick="document.querySelector('.section').scrollIntoView({behavior:'smooth'});return false;">▾</a>
   </div>
   <div class="section">
@@ -650,6 +691,23 @@ const SITE = {
   </div>
 </section>
 
+<!-- WELL WISHES -->
+<section class="page" id="page-wishes">
+  <div class="section">
+    <h2>Leave Us a Message</h2>
+    <div class="sub">Well wishes from near and far</div>
+    <p class="welcome" style="margin-bottom:2.2rem;">Can't make it, or just want to send your love? Leave us a message below — it means so much to us.</p>
+    <form class="pledge-form" id="wish-form">
+      <label for="wish-name">Name</label>
+      <input type="text" id="wish-name" name="name" required placeholder="Your full name" autocomplete="name">
+      <label for="wish-message">Your Message</label>
+      <textarea id="wish-message" name="message" required placeholder="Share your wishes for us..."></textarea>
+      <button type="submit" class="btn" id="wish-submit">Send Wishes</button>
+      <p id="wish-status" class="pledge-status"></p>
+    </form>
+  </div>
+</section>
+
 <div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" alt=""></div>
 
 <footer>
@@ -697,6 +755,52 @@ function updateCountdown() {
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+// Add to Calendar (Google + Apple/Outlook .ics) — anchored to Uganda time (EAT, UTC+3)
+(function setupCalendar() {
+  const gCal = $('cal-google');
+  const icsLink = $('cal-ics');
+  if (!gCal && !icsLink) return;
+
+  const start = new Date(`${SITE.weddingDateISO}:00+03:00`);
+  const end = new Date(start.getTime() + 12 * 60 * 60 * 1000); // ceremony through evening celebrations
+  const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const title = `${SITE.groom} & ${SITE.bride}'s Wedding`;
+  const details = `${SITE.tagline}. Ceremony at ${SITE.venue}, reception at ${SITE.receptionVenue}.`;
+  const location = `${SITE.venue}, Kampala, Uganda`;
+
+  if (gCal) {
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: title,
+      dates: `${fmt(start)}/${fmt(end)}`,
+      details: details,
+      location: location
+    });
+    gCal.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
+  if (icsLink) {
+    const esc = s => String(s).replace(/[\\,;]/g, m => '\\' + m);
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//KenWedsTasha//Wedding//EN',
+      'BEGIN:VEVENT',
+      `UID:kenwedstasha-${start.getTime()}@kenwedstasha.com`,
+      `DTSTAMP:${fmt(new Date())}`,
+      `DTSTART:${fmt(start)}`,
+      `DTEND:${fmt(end)}`,
+      `SUMMARY:${esc(title)}`,
+      `DESCRIPTION:${esc(details)}`,
+      `LOCATION:${esc(location)}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    icsLink.href = URL.createObjectURL(blob);
+  }
+})();
 
 // Our story
 $('story-text').innerHTML = SITE.ourStory.map(p => `<p>${p}</p>`).join('');
@@ -799,6 +903,51 @@ if (pledgeForm) {
   });
 }
 
+// Leave Us a Message (writes to the "Wishes" tab of the same Google Sheet via Apps Script)
+const wishForm = $('wish-form');
+if (wishForm) {
+  wishForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = $('wish-status');
+    const btn = $('wish-submit');
+
+    if (!SITE.pledgeEndpoint) {
+      statusEl.textContent = 'This form is being set up — please check back shortly.';
+      statusEl.className = 'pledge-status error';
+      return;
+    }
+
+    const payload = {
+      formType: 'wish',
+      name: $('wish-name').value.trim(),
+      message: $('wish-message').value.trim()
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    statusEl.textContent = '';
+    statusEl.className = 'pledge-status';
+
+    try {
+      await fetch(SITE.pledgeEndpoint, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      statusEl.textContent = 'Thank you! Your message has been received with love.';
+      statusEl.className = 'pledge-status success';
+      wishForm.reset();
+    } catch (err) {
+      statusEl.textContent = 'Something went wrong — please try again.';
+      statusEl.className = 'pledge-status error';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send Wishes';
+    }
+  });
+}
+
 // Live stream
 if (SITE.youtubeVideoId) {
   $('stream').innerHTML = `<div class="video-wrap"><iframe
@@ -852,7 +1001,7 @@ function showPage(hash) {
   page.classList.add('active');
   const link = document.querySelector(`nav a[href="#${name}"]`);
   if (link) link.classList.add('active');
-  document.body.classList.toggle('has-hero', name === 'home' || name === 'contribute');
+  document.body.classList.toggle('has-hero', name === 'home' || name === 'contribute' || name === 'wishes');
   window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', () => showPage(location.hash));
