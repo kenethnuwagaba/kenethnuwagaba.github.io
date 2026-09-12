@@ -49,7 +49,7 @@ const SITE = {
   receptionVenue: "Nsambya Gardens, Kampala",
 
   // --- Join Preparation (WhatsApp group) ---
-  whatsappGroupLink: "https://chat.whatsapp.com/HmadIsOdfqPFhrZoTakIhH",
+  whatsappGroupLink: "https://chat.whatsapp.com/HiwBMyRdKwWGzk0NDDP3Z7?s=cl&p=i&mlu=4&ilr=4",
   whatsappGroupText: "Join us on WhatsApp",
   welcomeMessage: "We thank you for joining us as we celebrate our love together. You have been part of this journey and we treasure you.",
 
@@ -57,6 +57,8 @@ const SITE = {
   // Shared Google Apps Script Web App URL — used by both the Contribution and Well Wishes forms.
   pledgeEndpoint: "https://script.google.com/macros/s/AKfycby6fgKnPnZKa-u2LLyNhlLqmHskI1FXh9zXIkjQ_lWDNDU2G62WEVoXQbMCWysabSgJWA/exec",
   pledgeCurrency: "UGX",
+   // Latest collection date guests may pick (YYYY-MM-DD). This day itself is allowed.
+   pledgeLastDate: "2026-11-30",
 
   // --- Our story ---
   ourStory: [
@@ -882,9 +884,11 @@ if (pledgeForm) {
   const pad = n => String(n).padStart(2, '0');
   const toISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const todayISO = toISO(new Date());
-  const weddingISO = (SITE.weddingDateISO || '').slice(0, 10);
-  dateInput.min = todayISO;
-  if (weddingISO) dateInput.max = weddingISO;
+  const lastISO = SITE.pledgeLastDate || (SITE.weddingDateISO || '').slice(0, 10);
+   const minISO = (lastISO && todayISO > lastISO) ? lastISO : todayISO;
+   const prettyLast = lastISO ? new Date(lastISO + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+   const applyDateLimits = () => { dateInput.min = minISO; if (lastISO) dateInput.max = lastISO; };
+   applyDateLimits();
 
   pledgeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -896,12 +900,15 @@ if (pledgeForm) {
       statusEl.className = 'pledge-status error';
       return;
     }
-
+    // Cut-off is enforced here too - some mobile keyboards allow typing past the picker limit
+     const chosen = dateInput.value;
+     if (lastISO && chosen > lastISO) { statusEl.textContent = 'Please choose a collection date on or before ' + prettyLast + '.'; statusEl.className = 'pledge-status error'; dateInput.focus(); return; }
+     if (chosen && chosen < minISO) { statusEl.textContent = 'Please choose a collection date that is not in the past.'; statusEl.className = 'pledge-status error'; dateInput.focus(); return; }
     const payload = {
       name: $('pledge-name').value.trim(),
       phone: $('pledge-phone').value.trim(),
       amount: $('pledge-amount').value,
-      date: dateInput.value
+      date: chosen
     };
 
     btn.disabled = true;
@@ -919,8 +926,7 @@ if (pledgeForm) {
       statusEl.textContent = 'Thank you! Your contribution has been recorded.';
       statusEl.className = 'pledge-status success';
       pledgeForm.reset();
-      dateInput.min = todayISO;
-      if (weddingISO) dateInput.max = weddingISO;
+      applyDateLimits();
     } catch (err) {
       statusEl.textContent = 'Something went wrong — please try again.';
       statusEl.className = 'pledge-status error';
