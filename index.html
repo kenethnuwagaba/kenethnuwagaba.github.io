@@ -386,12 +386,18 @@ const SITE = {
   .rsvp-box { text-align: center; max-width: 560px; margin: 0 auto; }
   .rsvp-deadline { color: var(--gold); font-style: italic; margin-bottom: 1.8rem; }
   .btn {
-    display: inline-block; margin: 0.4rem; padding: 0.85rem 2.2rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin: 0.4rem; padding: 0.85rem 2.2rem; min-height: 46px;
     border: 1px solid var(--gold); color: var(--gold); text-decoration: none;
     text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.78rem;
     transition: all .2s; background: none; cursor: pointer; font-family: inherit;
+    /* The whole box is the tap target: no child swallows the tap, no gesture
+       delay, and no text selection starting instead of a press */
+    touch-action: manipulation; -webkit-tap-highlight-color: rgba(201,161,94,0.25);
+    -webkit-user-select: none; user-select: none;
   }
-  .btn:hover { background: var(--gold); color: #0d0d0d; }
+  .btn > * { pointer-events: none; }
+  .btn:hover, .btn:active { background: var(--gold); color: #0d0d0d; }
   .btn:disabled { opacity: 0.55; cursor: default; }
   .info-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
 
@@ -600,7 +606,7 @@ const SITE = {
     .grid img:hover { transform: none; box-shadow: none; }
 
     /* Buttons big enough to tap */
-    .btn { display: block; width: 100%; margin: 0.5rem 0; padding: 0.9rem 1rem; font-size: 0.72rem; }
+    .btn { display: flex; width: 100%; margin: 0.5rem 0; padding: 0.9rem 1rem; font-size: 0.72rem; }
 
     /* Video & map keep 16:9 / taller map */
     #map-embed .video-wrap { padding-top: 75% !important; }
