@@ -412,6 +412,21 @@ const SITE = {
     background: rgba(255,255,255,0.06); border: 1px solid var(--blush);
     color: var(--ink); font-family: inherit; font-size: 1rem; box-sizing: border-box;
   }
+  .pledge-form select {
+    width: 100%; padding: 0.85rem 1rem; margin-bottom: 1.3rem;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--blush);
+    color: var(--ink); font-family: inherit; font-size: 1rem; box-sizing: border-box;
+    -webkit-appearance: none; appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c9a15e' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 1rem center; background-size: 12px 8px;
+  }
+  .pledge-form select:focus { outline: none; border-color: var(--gold); }
+  .pledge-form select option { background: #171717; color: var(--ink); }
+  .pledge-form input[readonly] {
+    color: var(--gold); cursor: default; background: rgba(255,255,255,0.03);
+    border-style: dashed;
+  }
+  .pledge-form input[readonly].over { color: #e08585; border-color: #e08585; }
   .pledge-form input:focus, .pledge-form textarea:focus { outline: none; border-color: var(--gold); }
   .pledge-form input::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(3) hue-rotate(5deg); }
   .pledge-form textarea {
@@ -752,6 +767,19 @@ const SITE = {
       <label for="pledge-amount">Amount (<span id="pledge-currency"></span>)</label>
       <input type="text" id="pledge-amount" name="amount" required placeholder="e.g. 50,000" inputmode="numeric" autocomplete="off">
       <small id="pledge-amount-hint" class="field-hint"></small>
+      <label for="pledge-mode">Mode</label>
+      <select id="pledge-mode" name="mode" required>
+        <option value="Pledge">Pledge — to be collected later</option>
+        <option value="Cash">Cash — paying some or all now</option>
+      </select>
+      <div id="pledge-cash-block" hidden>
+        <label for="pledge-cash">Cash Received (<span class="cur-label"></span>)</label>
+        <input type="text" id="pledge-cash" name="cash" inputmode="numeric" autocomplete="off" placeholder="e.g. 20,000">
+        <small id="pledge-cash-hint" class="field-hint"></small>
+        <label for="pledge-balance">Balance (<span class="cur-label"></span>)</label>
+        <input type="text" id="pledge-balance" name="balance" readonly tabindex="-1" aria-readonly="true">
+        <small id="pledge-balance-hint" class="field-hint"></small>
+      </div>
       <label for="pledge-date">Collection Date</label>
       <input type="date" id="pledge-date" name="date" required>
       <small id="pledge-date-hint" class="field-hint"></small>
@@ -1029,23 +1057,103 @@ if (pledgeForm) {
     // that inserted commas do not push it around
     const fromEnd = amountInput.value.length - (amountInput.selectionStart || 0);
     formatAmount();
+    applyMode();
     const pos = Math.max(0, amountInput.value.length - fromEnd);
     try { amountInput.setSelectionRange(pos, pos); } catch (err) {}
+    updateBalance();
   });
   formatAmount();
+
+  // --- Mode: Pledge (collect later) or Cash (paying some or all now) ---
+  const cur = SITE.pledgeCurrency || 'UGX';
+  document.querySelectorAll('.cur-label').forEach(el => { el.textContent = cur; });
+  const modeSelect = $('pledge-mode');
+  const cashBlock = $('pledge-cash-block');
+  const cashInput = $('pledge-cash');
+  const cashHint = $('pledge-cash-hint');
+  const balanceInput = $('pledge-balance');
+  const balanceHint = $('pledge-balance-hint');
+  const money = n => `${cur} ${groupNum(String(n))}`;
+  const isCash = () => modeSelect.value === 'Cash';
+  const cashDigits = () => cashInput.value.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+
+  // Balance is always Amount minus Cash, recalculated whenever either changes
+  const updateBalance = () => {
+    const total = Number(amountDigits() || 0);
+    const paid = Number(cashDigits() || 0);
+    const diff = total - paid;
+    if (!isCash()) { balanceInput.value = ''; return diff; }
+    balanceInput.value = (diff < 0 ? '-' : '') + groupNum(String(Math.abs(diff)));
+    if (paid > total) {
+      balanceInput.classList.add('over');
+      balanceHint.textContent = `Cash is ${money(paid - total)} more than the amount — please check the figures.`;
+      balanceHint.className = 'field-hint warn';
+    } else {
+      balanceInput.classList.remove('over');
+      balanceHint.textContent = diff === 0 && total > 0
+        ? 'Paid in full — nothing left to collect.'
+        : `${money(diff)} still to be collected`;
+      balanceHint.className = 'field-hint';
+    }
+    return diff;
+  };
+
+  const formatCash = () => {
+    const d = cashDigits();
+    cashInput.value = d ? groupNum(d) : '';
+    cashHint.textContent = d ? money(d) : 'The amount handed over now';
+    cashHint.className = 'field-hint';
+  };
+  cashInput.addEventListener('input', () => {
+    const fromEnd = cashInput.value.length - (cashInput.selectionStart || 0);
+    formatCash();
+    const pos = Math.max(0, cashInput.value.length - fromEnd);
+    try { cashInput.setSelectionRange(pos, pos); } catch (err) {}
+    updateBalance();
+  });
+
+  const applyMode = () => {
+    if (isCash()) {
+      cashBlock.hidden = false;
+      formatCash();
+    } else {
+      // Switching back to Pledge clears the cash figures so a stray value
+      // can never be submitted
+      cashBlock.hidden = true;
+      cashInput.value = '';
+      cashHint.textContent = '';
+      cashHint.className = 'field-hint';
+      balanceHint.textContent = '';
+      balanceHint.className = 'field-hint';
+      balanceInput.classList.remove('over');
+    }
+    updateBalance();
+  };
+  modeSelect.addEventListener('change', applyMode);
+  applyMode();
 
   // --- Thank-you panel ---
   const pledgeIntro = $('pledge-intro');
   const thanksPanel = $('pledge-thanks');
   const thanksBody = $('pledge-thanks-body');
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const showThanks = (name, amountStr, dateISO) => {
+  const showThanks = (name, amountStr, dateISO, paid, owing) => {
     const first = esc((name || '').split(/\s+/)[0] || 'Friend');
     const cur = SITE.pledgeCurrency || 'UGX';
     const prettyDate = dateISO
       ? new Date(dateISO + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
       : '';
-    thanksBody.innerHTML = `${first}, we have received your pledge of <strong>${cur} ${amountStr}</strong>` +
+    let body = `${first}, we have received your contribution of <strong>${cur} ${amountStr}</strong>`;
+    if (paid > 0) {
+      body += ` — <strong>${cur} ${groupNum(String(paid))}</strong> received in cash`;
+      body += owing > 0
+        ? `, with <strong>${cur} ${groupNum(String(owing))}</strong> to be collected` +
+          (prettyDate ? ` on <strong>${prettyDate}</strong>.` : '.')
+        : ', paid in full.';
+    } else {
+      body += prettyDate ? `, for collection on <strong>${prettyDate}</strong>.` : '.';
+    }
+    thanksBody.innerHTML = body;
       (prettyDate ? `, for collection on <strong>${prettyDate}</strong>.` : '.');
     pledgeForm.hidden = true;
     if (pledgeIntro) pledgeIntro.hidden = true;
@@ -1105,6 +1213,25 @@ if (pledgeForm) {
       return;
     }
 
+    // Mode: a Pledge is collected in full later, so cash is 0 and the balance
+    // is the whole amount. Cash splits the amount between the two.
+    const mode = isCash() ? 'Cash' : 'Pledge';
+    let cash = 0;
+    let balance = Number(amount);
+    if (mode === 'Cash') {
+      cash = Number(cashDigits() || 0);
+      if (!cash) {
+        fail('Please enter the cash amount received.', cashInput);
+        return;
+      }
+      if (cash > Number(amount)) {
+        updateBalance();
+        fail('The cash entered is more than the total amount — please check the figures.', cashInput);
+        return;
+      }
+      balance = Number(amount) - cash;
+    }
+
     // Second line of defence: some mobile keyboards let a date be typed past the picker limit
     const chosen = dateInput.value;
     if (lastISO && chosen > lastISO) {
@@ -1117,7 +1244,15 @@ if (pledgeForm) {
     }
 
     const name = $('pledge-name').value.trim();
-    const payload = { name: name, phone: phone, amount: amount, date: chosen };
+    const payload = {
+      name: name,
+      phone: phone,
+      amount: amount,
+      mode: mode,
+      cash: String(cash),
+      balance: String(balance),
+      date: chosen
+    };
 
     btn.disabled = true;
     setBtnLabel('Sending...');
@@ -1137,7 +1272,7 @@ if (pledgeForm) {
         }),
         new Promise(r => setTimeout(r, 1000))
       ]);
-      showThanks(name, groupNum(amount), chosen);
+      showThanks(name, groupNum(amount), chosen, cash, balance);
     } catch (err) {
       statusEl.textContent = 'Something went wrong — please try again.';
       statusEl.className = 'pledge-status error';
