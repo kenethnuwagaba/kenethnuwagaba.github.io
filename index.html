@@ -415,6 +415,11 @@ const SITE = {
     resize: vertical; min-height: 110px;
   }
   .pledge-form .btn { width: 100%; text-align: center; margin: 0.4rem 0 0; }
+  .field-hint {
+    display: block; margin: -1rem 0 1.3rem; font-size: 0.78rem;
+    letter-spacing: 0.03em; color: var(--blush); opacity: 0.85;
+  }
+  .field-hint.warn { color: #e08585; opacity: 1; }
   .pledge-status { text-align: center; margin-top: 1rem; font-size: 0.9rem; min-height: 1.2em; }
   .pledge-status.success { color: var(--gold); }
   .pledge-status.error { color: #e08585; }
@@ -705,6 +710,7 @@ const SITE = {
       <input type="number" id="pledge-amount" name="amount" min="1" step="1" required placeholder="e.g. 50000" inputmode="numeric">
       <label for="pledge-date">Collection Date</label>
       <input type="date" id="pledge-date" name="date" required>
+      <small id="pledge-date-hint" class="field-hint"></small>
       <button type="submit" class="btn" id="pledge-submit">Submit</button>
       <p id="pledge-status" class="pledge-status"></p>
     </form>
@@ -888,8 +894,43 @@ if (pledgeForm) {
   const lastISO = SITE.pledgeLastDate || (SITE.weddingDateISO || '').slice(0, 10);
    const minISO = (lastISO && todayISO > lastISO) ? lastISO : todayISO;
    const prettyLast = lastISO ? new Date(lastISO + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-   const applyDateLimits = () => { dateInput.min = minISO; if (lastISO) dateInput.max = lastISO; };
-   applyDateLimits();
+  // Native pickers honour these on desktop and most Android browsers
+  const hintEl = $('pledge-date-hint');
+  const defaultHint = prettyLast ? `On or before ${prettyLast}` : '';
+  const setHint = (msg, warn) => {
+    if (!hintEl) return;
+    hintEl.textContent = msg || defaultHint;
+    hintEl.className = warn ? 'field-hint warn' : 'field-hint';
+  };
+  const applyDateLimits = () => {
+    dateInput.min = minISO;
+    if (lastISO) dateInput.max = lastISO;
+    setHint('', false);
+  };
+  applyDateLimits();
+
+  // Some mobile date pickers (notably the iOS wheel) ignore max/min, so pull the
+  // value back in range the moment it is picked rather than waiting for submit.
+  const clampLate = () => {
+    if (lastISO && dateInput.value && dateInput.value > lastISO) {
+      dateInput.value = lastISO;
+      setHint(`Collections end on ${prettyLast} — we\'ve set the latest date for you.`, true);
+      return true;
+    }
+    return false;
+  };
+  const clampEarly = () => {
+    if (dateInput.value && dateInput.value < minISO) {
+      dateInput.value = minISO;
+      setHint('That date has passed — we’ve moved it to the earliest date available.', true);
+      return true;
+    }
+    return false;
+  };
+  // "Too late" is safe to correct instantly; "too early" waits for blur so that
+  // partially typed years on desktop (0002, 0202...) are not snapped mid-entry.
+  dateInput.addEventListener('change', () => { if (!clampLate()) setHint('', false); });
+  dateInput.addEventListener('blur', () => { if (!clampLate() && !clampEarly()) setHint('', false); })
 
   pledgeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
