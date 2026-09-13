@@ -438,7 +438,7 @@ const SITE = {
   .pledge-form .btn { width: 100%; text-align: center; margin: 0.4rem 0 0; }
   .field-hint {
     display: block; margin: -1rem 0 1.3rem; font-size: 0.78rem;
-    letter-spacing: 0.03em; color: var(--blush); opacity: 0.85;
+    letter-spacing: 0.03em; color: #a89f93; opacity: 0.9;
   }
   .field-hint.warn { color: #e08585; opacity: 1; }
   [hidden] { display: none !important; }
@@ -1130,6 +1130,9 @@ if (pledgeForm) {
     updateBalance();
   };
   modeSelect.addEventListener('change', applyMode);
+  // Any reset of the form must re-sync the cash fields with the mode, whatever
+  // triggered it — the reset event fires before the controls clear, so defer
+  pledgeForm.addEventListener('reset', () => { setTimeout(applyMode, 0); });
   applyMode();
 
   // --- Thank-you panel ---
