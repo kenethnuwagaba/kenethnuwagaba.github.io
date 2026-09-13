@@ -422,14 +422,21 @@ const SITE = {
   .field-hint.warn { color: #e08585; opacity: 1; }
   [hidden] { display: none !important; }
 
-  /* Submitting spinner */
-  .spinner {
-    display: inline-block; width: 0.8em; height: 0.8em; margin-right: 0.6em;
-    border: 2px solid rgba(201,161,94,0.3); border-top-color: var(--gold);
-    border-radius: 50%; vertical-align: -0.08em;
-    animation: spin 0.7s linear infinite;
+  /* Submitting — the gold fills across the button, left to right */
+  .btn { position: relative; overflow: hidden; }
+  .btn-fill {
+    display: none; position: absolute; inset: 0;
+    align-items: center; justify-content: center;
+    background: var(--gold); color: #0d0d0d;
+    pointer-events: none; white-space: nowrap;
+    clip-path: inset(0 100% 0 0);
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn.sending .btn-fill { display: flex; animation: btnFill 1s linear forwards; }
+  .btn.sending:disabled { opacity: 1; }
+  @keyframes btnFill { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .btn.sending .btn-fill { animation: none; clip-path: inset(0 0 0 0); }
+  }
 
   /* Thank-you panel & confetti */
   #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; display: none; }
@@ -742,7 +749,7 @@ const SITE = {
       <label for="pledge-date">Collection Date</label>
       <input type="date" id="pledge-date" name="date" required>
       <small id="pledge-date-hint" class="field-hint"></small>
-      <button type="submit" class="btn" id="pledge-submit"><span id="pledge-btn-label">Submit</span></button>
+      <button type="submit" class="btn" id="pledge-submit"><span class="btn-fill" aria-hidden="true"><span id="pledge-btn-fill-label">Submit</span></span><span id="pledge-btn-label">Submit</span></button>
       <p id="pledge-status" class="pledge-status"></p>
     </form>
     <div class="thanks-panel" id="pledge-thanks" hidden>
@@ -1055,11 +1062,17 @@ if (pledgeForm) {
     pledgeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 
+  // The button carries two copies of its label: the gold one, and a dark one
+  // on the fill that sweeps over it while sending. Keep them in step.
+  const setBtnLabel = (text) => {
+    $('pledge-btn-label').textContent = text;
+    $('pledge-btn-fill-label').textContent = text;
+  };
+
   pledgeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const statusEl = $('pledge-status');
     const btn = $('pledge-submit');
-    const btnLabel = $('pledge-btn-label');
 
     if (!SITE.pledgeEndpoint) {
       statusEl.textContent = 'This form is being set up — please check back shortly.';
@@ -1101,13 +1114,14 @@ if (pledgeForm) {
     const payload = { name: name, phone: phone, amount: amount, date: chosen };
 
     btn.disabled = true;
-    btnLabel.innerHTML = '<span class="spinner"></span>Sending...';
+    setBtnLabel('Sending...');
+    btn.classList.add('sending');
     statusEl.textContent = '';
     statusEl.className = 'pledge-status';
 
     try {
-      // The opaque no-cors response returns almost instantly, so hold the
-      // spinner briefly to make it clear the pledge is being sent
+      // The opaque no-cors response returns almost instantly, so hold on
+      // until the gold has finished filling the button
       await Promise.all([
         fetch(SITE.pledgeEndpoint, {
           method: 'POST',
@@ -1115,15 +1129,16 @@ if (pledgeForm) {
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         }),
-        new Promise(r => setTimeout(r, 900))
+        new Promise(r => setTimeout(r, 1000))
       ]);
       showThanks(name, groupNum(amount), chosen);
     } catch (err) {
       statusEl.textContent = 'Something went wrong — please try again.';
       statusEl.className = 'pledge-status error';
     } finally {
+      btn.classList.remove('sending');
       btn.disabled = false;
-      btnLabel.textContent = 'Submit';
+      setBtnLabel('Submit');
     }
   });
 }
