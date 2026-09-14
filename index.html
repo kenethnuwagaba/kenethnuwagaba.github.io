@@ -443,6 +443,28 @@ const SITE = {
   .field-hint.warn { color: #e08585; opacity: 1; }
   [hidden] { display: none !important; }
 
+  /* Mobile money merchant codes */
+  .momo-panel { max-width: 460px; margin: 0 auto 2.4rem; }
+  .momo-title { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.78rem; margin-bottom: 1.1rem; }
+  .momo-grid { display: flex; gap: 0.9rem; }
+  .momo-card {
+    flex: 1; display: flex; align-items: center; gap: 0.8rem; min-width: 0;
+    border: 1px solid var(--blush); background: rgba(255,255,255,0.04); padding: 0.8rem;
+  }
+  .momo-logo { width: 46px; height: 46px; border-radius: 8px; display: block; flex: 0 0 auto; }
+  .momo-meta { display: flex; flex-direction: column; min-width: 0; }
+  .momo-name { font-size: 0.88rem; color: var(--ink); }
+  .momo-label { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.14em; color: #a89f93; margin-top: 0.15rem; }
+  .momo-code {
+    background: none; border: 0; border-bottom: 1px dashed rgba(201,161,94,0.55);
+    padding: 0.1rem 0; margin: 0.15rem 0 0; font-family: inherit; font-size: 1.12rem;
+    letter-spacing: 0.08em; color: var(--gold); cursor: pointer; text-align: left;
+    align-self: flex-start; touch-action: manipulation;
+  }
+  .momo-code:hover { border-bottom-style: solid; }
+  .momo-code.copied { color: #8fd18f; border-bottom-color: #8fd18f; }
+  .momo-note { text-align: center; font-size: 0.85rem; color: #a89f93; font-style: italic; margin-top: 1.1rem; }
+  @media (max-width: 640px) { .momo-grid { flex-direction: column; } }
   /* Submitting — the gold fills across the button, left to right */
   .btn { position: relative; overflow: hidden; }
   .btn-fill {
@@ -758,6 +780,28 @@ const SITE = {
     <h2>Make a Contribution</h2>
     <div class="sub">Every gesture means the world to us</div>
     <p class="welcome" id="pledge-intro" style="margin-bottom:2.2rem;">If you'd like to contribute towards our celebration, kindly fill in the form below. We are deeply grateful for your love and support.</p>
+    <div class="momo-panel">
+      <h3 class="momo-title">Send by Mobile Money</h3>
+      <div class="momo-grid">
+        <div class="momo-card">
+          <img class="momo-logo" src="data:image/png;base64,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" alt="MTN MoMo" width="132" height="132">
+          <div class="momo-meta">
+            <span class="momo-name">MTN MoMo</span>
+            <span class="momo-label">Merchant Code</span>
+            <button type="button" class="momo-code" data-code="05522666">05522666</button>
+          </div>
+        </div>
+        <div class="momo-card">
+          <img class="momo-logo" src="data:image/png;base64,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" alt="Airtel Money" width="132" height="132">
+          <div class="momo-meta">
+            <span class="momo-name">Airtel Money</span>
+            <span class="momo-label">Merchant Code</span>
+            <button type="button" class="momo-code" data-code="7209846">7209846</button>
+          </div>
+        </div>
+      </div>
+      <p class="momo-note">After sending, kindly still fill in the form below so we can record your contribution against your name.</p>
+    </div>
     <form class="pledge-form" id="pledge-form">
       <label for="pledge-name">Name</label>
       <input type="text" id="pledge-name" name="name" required placeholder="Your full name" autocomplete="name">
@@ -1355,6 +1399,39 @@ function burstConfetti() {
     }
   })();
 }
+
+// Mobile money merchant codes — tap to copy
+document.querySelectorAll('.momo-code').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const code = btn.dataset.code || btn.textContent.trim();
+    let ok = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(code);
+        ok = true;
+      }
+    } catch (err) { ok = false; }
+    if (!ok) {
+      // Older mobile browsers block the clipboard API outright
+      try {
+        const t = document.createElement('textarea');
+        t.value = code;
+        t.setAttribute('readonly', '');
+        t.style.position = 'fixed';
+        t.style.opacity = '0';
+        document.body.appendChild(t);
+        t.select();
+        ok = document.execCommand('copy');
+        document.body.removeChild(t);
+      } catch (err2) { ok = false; }
+    }
+    if (!ok) return;
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+  });
+});
 
 // Leave Us a Message (writes to the "Wishes" tab of the same Google Sheet via Apps Script)
 const wishForm = $('wish-form');
